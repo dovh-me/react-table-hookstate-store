@@ -3,33 +3,32 @@ import {
   flexRender,
   getCoreRowModel,
   useReactTable,
-} from '@tanstack/react-table';
-import React from 'react';
-import { Model, StoreList } from '../hookstate';
-import { useHookstate } from '@hookstate/core';
+} from "@tanstack/react-table";
+import { Model, StoreList } from "../hookstate";
+import { State, useHookstate } from "@hookstate/core";
 
-const columnHelper = createColumnHelper<Model>();
+const columnHelper = createColumnHelper<State<Model, object>>();
 
 const columns = [
-  columnHelper.accessor('symbol', {
-    cell: (info) => info.getValue(),
-    header: 'Symbol',
+  columnHelper.accessor("symbol", {
+    cell: (info) => info.getValue().get(),
+    header: "Symbol",
     footer: (info) => info.column.id,
   }),
   columnHelper.accessor((row) => row.description, {
-    id: 'description',
-    cell: (info) => <i>{info.getValue()}</i>,
+    id: "description",
+    cell: (info) => <i>{info.getValue().get()}</i>,
     header: () => <span>Description</span>,
     footer: (info) => info.column.id,
   }),
-  columnHelper.accessor('change', {
-    header: () => 'Change',
-    cell: (info) => info.renderValue(),
+  columnHelper.accessor("change", {
+    header: () => "Change",
+    cell: (info) => info.getValue().get(),
     footer: (info) => info.column.id,
   }),
-  columnHelper.accessor('exchange', {
-    header: () => 'Exchange',
-    cell: (info) => <b>{info.getValue()}</b>,
+  columnHelper.accessor("exchange", {
+    header: () => "Exchange",
+    cell: (info) => <b>{info.getValue().get()}</b>,
   }),
 ];
 
@@ -38,11 +37,9 @@ type TableProps = {
 };
 
 function Table(props: TableProps) {
-  const data = props.data.list.map((i) => i.get());
-  const updater = useHookstate(props.data.meta.itemUpdated);
-  console.log('updater', updater);
-
-  const rerender = React.useReducer(() => ({}), {})[1];
+  const data = props.data.list;
+  useHookstate(props.data.meta.itemUpdated).get();
+  useHookstate(props.data.meta.itemAdded).get();
 
   const table = useReactTable({
     data,
@@ -98,9 +95,6 @@ function Table(props: TableProps) {
         </tfoot>
       </table>
       <div className="h-4" />
-      <button onClick={() => rerender()} className="border p-2">
-        Rerender
-      </button>
     </div>
   );
 }

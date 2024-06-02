@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { hookstate, State } from '@hookstate/core';
+import { hookstate, State } from "@hookstate/core";
 
 type StoreMeta = {
   [index: string]: StoreListMeta;
@@ -11,9 +11,9 @@ type StoreListMeta = { itemAdded: number; itemUpdated: number };
 export class Model {
   change = 0;
   percentage = 0;
-  symbol = '';
-  description = '';
-  exchange = '';
+  symbol = "";
+  description = "";
+  exchange = "";
   lastTradePrice = 0;
 }
 
@@ -59,7 +59,7 @@ export class Store {
     setInterval(() => {
       this.updateItemPath(
         uniqueKey,
-        'change',
+        "change",
         (item: any) => item + 1,
         groupKey
       );
@@ -84,7 +84,7 @@ export class Store {
   ) {
     const item = this.getItem(uniqueKey);
     path
-      .split('.')
+      .split(".")
       .reduce((acc: any, key: string, index: number, arr: string[]) => {
         if (index === arr.length - 1) {
           acc[key].set(value);
