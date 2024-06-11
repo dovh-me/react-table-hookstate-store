@@ -6,7 +6,7 @@ type StoreMeta = {
   [index: string]: StoreListMeta;
 };
 
-type StoreListMeta = { itemAdded: number; itemUpdated: number };
+type StoreListMeta = { itemAdded: number };
 
 export class Model {
   change = 0;
@@ -35,9 +35,7 @@ export class Store {
     const hasGroup = this.groupMap.has(groupKey);
 
     if (!hasGroup) {
-      Store.metaState
-        .nested(groupKey)
-        .set({ itemAdded: Date.now(), itemUpdated: Date.now() });
+      Store.metaState.nested(groupKey).set({ itemAdded: Date.now() });
       const groupMeta = Store.metaState.nested(groupKey);
       this.groupMap.set(groupKey, new StoreList(groupMeta));
     }
@@ -60,8 +58,8 @@ export class Store {
       this.updateItemPath(
         uniqueKey,
         "change",
-        (item: any) => item + 1,
-        groupKey
+        (item: any) => item + 1
+        // groupKey
       );
     }, 1000);
   }
@@ -79,8 +77,8 @@ export class Store {
   updateItemPath(
     uniqueKey: string,
     path: string,
-    value: any,
-    groupKey: string
+    value: any
+    // groupKey: string
   ) {
     const item = this.getItem(uniqueKey);
     path
@@ -92,11 +90,11 @@ export class Store {
         return acc[key];
       }, item);
 
-    this.getGroup(groupKey).meta.itemUpdated.set(Date.now());
+    // this.getGroup(groupKey).meta.itemUpdated.set(Date.now());
   }
 
   updateItem(uniqueKey: string, value: any) {
     this.state.nested(uniqueKey).set(value);
-    this.getGroup(uniqueKey).meta.itemUpdated.set(Date.now());
+    // this.getGroup(uniqueKey).meta.itemUpdated.set(Date.now());
   }
 }
